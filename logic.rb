@@ -3,6 +3,7 @@
 # class which gets input
 class MyReader
   attr_reader :clubs
+
   def check_args
     return if ARGV.length == 1
 
@@ -11,17 +12,15 @@ class MyReader
   end
 
   def fill_clubs_names
-    file = File.open(ARGV[0])
-    file.each do |line|
-      club_row = line.split(',')
-      club_row.map! do |club|
+    File.foreach(ARGV[0]) do |line|
+      row = line.split(',')
+      row.map! do |club|
         var = club.strip
         var = var.reverse.sub(' ', '|').reverse
         current_club = var.split('|')
         @clubs[current_club[0].to_sym] = 0
       end
     end
-    file.close
   end
 
   def fill_clubs_score
@@ -32,16 +31,20 @@ class MyReader
 
   def find_match_score(line)
     arr = prepare_line(line)
-    arr.map! { |sub_array| sub_array.split('|') }
+    arr.map! { |sub_array| sub_array.split('|') } # [ ["Lions", "3"], ["Snakes", "3"] ]
 
     if arr[0][1].to_i > arr[1][1].to_i
-      @clubs[arr[0][0].to_sym] += 3
+      change_score(arr[0][0], 3)
     elsif arr[0][1].to_i < arr[1][1].to_i
-      @clubs[arr[1][0].to_sym] += 3
+      change_score(arr[1][0], 3)
     else
-      @clubs[arr[0][0].to_sym] += 1
-      @clubs[arr[1][0].to_sym] += 1
+      change_score(arr[0][0], 1)
+      change_score(arr[1][0], 1)
     end
+  end
+
+  def change_score(arr, points)
+    @clubs[arr.to_sym] += points
   end
 
   def prepare_line(line)
@@ -65,13 +68,17 @@ class MyReader
     end
   end
 
-  def initialize
-    @clubs = {}
+  def main
     check_args
     fill_clubs_names
     fill_clubs_score
     sort!
     print
+  end
+
+  def initialize
+    @clubs = {}
+    main
   end
 end
 
