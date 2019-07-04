@@ -1,8 +1,21 @@
 # frozen_string_literal:true
 
-# class which gets input
-class MyReader
-  attr_reader :clubs
+# class which realize soccer logic
+class SoccerLogic
+  def initialize
+    @clubs = {}
+    main
+  end
+
+  def main
+    check_args
+    fill_clubs_names
+    fill_clubs_score
+    sort!
+    print
+  end
+
+  private
 
   def check_args
     return if ARGV.length == 1
@@ -67,19 +80,6 @@ class MyReader
       row_number += 1
     end
   end
-
-  def main
-    check_args
-    fill_clubs_names
-    fill_clubs_score
-    sort!
-    print
-  end
-
-  def initialize
-    @clubs = {}
-    main
-  end
 end
 
-MyReader.new
+SoccerLogic.new
