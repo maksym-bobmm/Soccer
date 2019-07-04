@@ -8,22 +8,23 @@ class MyReader
       puts 'Args error. The program will close'
       exit
     end
-    @clubs = {}
   end
 
   def fill_clubs_names
     file = File.open(ARGV[0])
     file.each do |line|
       club_row = line.split(',')
-      puts "club row |#{club_row}|"
+      # puts "club row |#{club_row}|"
       # TODO improve finding club name (now supposed to score cant be > 9) strip[0..-3].to_sym
       # club_row.each { |club| @clubs[club.strip[0..-3].to_sym] = 0 }
       club_row.map! do |club|
         var = club.strip
         var = var.reverse.sub(' ', '|').reverse
-        var.split('|')
+        current_club = var.split('|')
+        # puts "current #{current_club}"
+        @clubs[current_club[0].to_sym] = 0
       end
-      puts "club row final |#{club_row}|\n\n"
+      # puts "club row final |#{club_row}|\n\n"
     end
     file.close
   end
@@ -41,6 +42,7 @@ class MyReader
     arr[1] = arr[1].split('|')
     # puts "final arr #{arr} - #{arr.class}"
 
+
     # arr = my_line.split(', ')
     # puts "Splitted arr #{arr}"
 
@@ -51,9 +53,9 @@ class MyReader
       @clubs[arr[1][0].to_sym] += 3
     else
       # puts " qweqw #{arr[0][0]} #{@clubs[arr[0][0]]}"
-      puts "clubs === #{@clubs}"
-      puts "first #{arr[0][0]}"
-      puts "arr |#{@clubs[arr[0][0].to_sym]}|"
+      # puts "clubs === #{@clubs}"
+      # puts "first #{arr[0][0]}"
+      # puts "arr |#{@clubs[arr[0][0].to_sym]}|"
       @clubs[arr[0][0].to_sym] += 1
       @clubs[arr[1][0].to_sym] += 1
     end
@@ -75,16 +77,27 @@ class MyReader
     arr
   end
 
+  def sort!
+    @clubs = @clubs.sort_by { |_, v| v }.reverse
+  end
+
   def print
-    @clubs.sort_by { |k,v| v }.reverse!
+    row_number = 1
+    @clubs.each do |line|
+      item = line[1] == 1 ? 'pt' : 'pts'
+
+      puts "#{row_number}. #{line[0]}, #{line[1]} #{item}"
+      row_number += 1
+    end
   end
 
   def initialize
+    @clubs = {}
     check_args
     fill_clubs_names
     fill_clubs_score
+    sort!
     print
-    # puts @clubs
   end
 end
 
