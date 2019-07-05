@@ -24,7 +24,7 @@ class SoccerLogic
   end
 
   def fill_clubs_names
-    File.foreach(ARGV[0]) do |line|
+    File.foreach(ARGV[0]) do |line| # Lions 3, Snakes 3
       row = line.split(',')
       row.map! do |club|
         var = club.strip
