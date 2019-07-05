@@ -4,7 +4,6 @@
 class SoccerLogic
   def initialize
     @clubs = {}
-    main
   end
 
   def main
@@ -82,4 +81,4 @@ class SoccerLogic
   end
 end
 
-SoccerLogic.new
+SoccerLogic.new.main
